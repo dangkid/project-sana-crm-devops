@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  sana-web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sana-clinica-web
+    # ✅ NO EXPONER PUERTOS AL HOST - El NPM accede vía red Docker interna
+    expose:
+      - "80"
+    volumes:
+      - ./public:/var/www/sana-clinica:ro
+      - ./nginx/sana.conf:/etc/nginx/sites-available/default:ro
+    environment:
+      - TZ=America/Bogota
+      - VIRTUAL_HOST=sana-clinica.com,www.sana-clinica.com
+      - LETSENCRYPT_HOST=sana-clinica.com,www.sana-clinica.com
+      - LETSENCRYPT_EMAIL=contacto@sana-clinica.com
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/index.html"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+    networks:
+      - sana-network
+      - nginx_default  # ✅ Red del Proxy Manager (INTERNA)
+
+networks:
+  sana-network:
+    driver: bridge
+  nginx_default:     # ✅ Red externa del NPM
+    external: true

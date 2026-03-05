@@ -1,0 +1,430 @@
+/* ============================================
+   SANA - Custom Styles
+   Center Terapéutico Integral
+   ============================================ */
+
+/* Variables CSS */
+:root {
+    --sana-blue: #0ea5e9;
+    --sana-green: #10b981;
+    --sana-cyan: #06b6d4;
+    --sana-dark: #0c4a6e;
+    --sana-light: #e0f2fe;
+    --transition: all 0.3s ease;
+}
+
+/* Reset y Estilos Base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Poppins', 'Inter', sans-serif;
+    color: #1f2937;
+    background-color: #ffffff;
+    overflow-x: hidden;
+}
+
+/* ============================================
+   ANIMACIONES
+   ============================================ */
+
+@keyframes blob {
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+    }
+    33% {
+        transform: translate(30px, -50px) scale(1.1);
+    }
+    66% {
+        transform: translate(-20px, 20px) scale(0.9);
+    }
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-60px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(60px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse-glow {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(14, 165, 233, 0.7);
+    }
+    50% {
+        box-shadow: 0 0 0 10px rgba(14, 165, 233, 0);
+    }
+}
+
+/* Clases de utilidad para animaciones */
+.animate-blob {
+    animation: blob 7s infinite;
+}
+
+.animation-delay-2000 {
+    animation-delay: 2s;
+}
+
+.animate-float {
+    animation: float 6s ease-in-out infinite;
+}
+
+.animate-slideInLeft {
+    animation: slideInLeft 0.6s ease-out;
+}
+
+.animate-slideInRight {
+    animation: slideInRight 0.6s ease-out;
+}
+
+.animate-fadeInUp {
+    animation: fadeInUp 0.8s ease-out;
+}
+
+/* ============================================
+   NAVBAR / HEADER
+   ============================================ */
+
+nav {
+    backdrop-filter: blur(10px);
+    background-color: rgba(255, 255, 255, 0.95);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+nav a:hover {
+    color: var(--sana-blue);
+}
+
+/* ============================================
+   HERO SECTION
+   ============================================ */
+
+#inicio {
+    position: relative;
+    overflow: hidden;
+}
+
+#inicio h1 {
+    animation: slideInLeft 0.8s ease-out;
+}
+
+#inicio p {
+    animation: fadeInUp 0.8s ease-out 0.2s both;
+}
+
+#inicio button {
+    animation: fadeInUp 0.8s ease-out 0.4s both;
+    cursor: pointer;
+}
+
+/* Degradado de texto */
+.bg-clip-text {
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* ============================================
+   BOTONES
+   ============================================ */
+
+button {
+    transition: var(--transition);
+    font-family: 'Poppins', sans-serif;
+    position: relative;
+    overflow: hidden;
+}
+
+button:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    transition: left 0.3s ease;
+}
+
+button:hover:before {
+    left: 100%;
+}
+
+.bg-gradient-to-r {
+    background-image: linear-gradient(to right, var(--sana-blue), var(--sana-green));
+}
+
+/* ============================================
+   TARJETAS DE SERVICIOS
+   ============================================ */
+
+.group {
+    transition: var(--transition);
+}
+
+.group:hover {
+    transform: translateY(-10px);
+}
+
+.group svg {
+    transition: var(--transition);
+}
+
+.group:hover svg {
+    transform: scale(1.1);
+}
+
+/* ============================================
+   FORMULARIO
+   ============================================ */
+
+input, select, textarea {
+    transition: var(--transition);
+    border-color: #e5e7eb;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: var(--sana-blue);
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+    outline: none;
+}
+
+input::placeholder {
+    color: #d1d5db;
+}
+
+textarea::placeholder {
+    color: #d1d5db;
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+
+footer {
+    background: linear-gradient(135deg, var(--sana-dark) 0%, #1e3a5f 100%);
+    position: relative;
+}
+
+footer a {
+    position: relative;
+    color: #9ca3af;
+    transition: color 0.3s ease;
+}
+
+footer a:after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--sana-blue);
+    transition: width 0.3s ease;
+}
+
+footer a:hover:after {
+    width: 100%;
+}
+
+/* ============================================
+   SCROLL SMOOTH
+   ============================================ */
+
+section {
+    scroll-margin-top: 64px;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2.25rem !important;
+    }
+
+    h2 {
+        font-size: 1.875rem !important;
+    }
+
+    #inicio {
+        padding-top: 100px !important;
+        padding-bottom: 40px !important;
+    }
+
+    nav {
+        height: 64px;
+    }
+
+    section {
+        scroll-margin-top: 64px;
+    }
+}
+
+/* ============================================
+   ACCESIBILIDAD
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ============================================
+   UTILIDADES
+   ============================================ */
+
+.shadow-lg {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.shadow-xl {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.shadow-2xl {
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+/* Efecto hover para botones */
+.hover\:shadow-xl:hover {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.hover\:shadow-2xl:hover {
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+/* Transición suave en escalado */
+.hover\:scale-105:hover {
+    transform: scale(1.05);
+}
+
+/* ============================================
+   ESTADOS ESPECIALES
+   ============================================ */
+
+/* Degradados personalizados */
+.bg-gradient-to-br {
+    background-image: linear-gradient(to bottom right, var(--sana-blue), var(--sana-green));
+}
+
+/* Bordes suaves */
+.rounded-2xl {
+    border-radius: 1rem;
+}
+
+.rounded-lg {
+    border-radius: 0.5rem;
+}
+
+.rounded-full {
+    border-radius: 9999px;
+}
+
+/* ============================================
+   MENU MÓVIL
+   ============================================ */
+
+#mobileMenu {
+    animation: slideInLeft 0.3s ease-out;
+}
+
+#mobileMenu.hidden {
+    display: none;
+}
+
+/* ============================================
+   EFECTOS VISUALES ADICIONALES
+   ============================================ */
+
+/* Efecto glassmorphism */
+.backdrop-blur {
+    backdrop-filter: blur(10px);
+}
+
+/* Gradiente de texto */
+.text-transparent {
+    color: transparent;
+}
+
+/* Sombras sutiles */
+.shadow-sm {
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+/* Border suave */
+.border-2 {
+    border-width: 2px;
+    border-style: solid;
+}
+
+/* ============================================
+   OPTIMIZACIONES DE RENDIMIENTO
+   ============================================ */
+
+/* Usar GPU para animaciones */
+.animate-blob,
+.animate-float {
+    will-change: transform;
+}
+
+button {
+    will-change: transform, box-shadow;
+}
+
+.group {
+    will-change: transform;
+}
+
+/* Usar content-visibility para optimizar performance */
+section {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 500px;
+}

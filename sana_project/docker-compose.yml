@@ -1,0 +1,147 @@
+version: '3.8'
+
+# ============================================================
+# SANA CLÍNICA - Stack Completo (Nginx Proxy + Web + Chatwoot)
+# ============================================================
+
+services:
+  # ========== NGINX PROXY MANAGER ==========
+  nginx-proxy:
+    image: 'jc21/nginx-proxy-manager:latest'
+    container_name: nginx-app-1
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '81:81'
+      - '443:443'
+    volumes:
+      - ./nginx/data:/data
+      - ./nginx/letsencrypt:/etc/letsencrypt
+    networks:
+      - nginx_default
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:81/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  # ========== APLICACIÓN WEB SANA ==========
+  sana-web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    container_name: sana-clinica-web
+    # ✅ NO EXPONER AL HOST - Proxy accede via red Docker interna
+    expose:
+      - "80"
+    volumes:
+      - ./web/public:/var/www/sana-clinica:ro
+      - ./web/nginx/sana.conf:/etc/nginx/sites-available/default:ro
+    environment:
+      - TZ=America/Bogota
+      - NODE_ENV=production
+      - VIRTUAL_HOST=sana-clinica.online,www.sana-clinica.online
+      - LETSENCRYPT_HOST=sana-clinica.online,www.sana-clinica.online
+      - LETSENCRYPT_EMAIL=contacto@sana-clinica.com
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/index.html"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - sana-network
+      - nginx_default  # ✅ Red compartida con NPM
+    depends_on:
+      - nginx-proxy
+
+  # ========== CHATWOOT (CRM) ==========
+  chatwoot:
+    image: chatwoot/chatwoot:latest
+    container_name: chatwoot-app
+    command: bundle exec rails s -p 3000 -b 0.0.0.0
+    restart: always
+    environment:
+      - FRONTEND_URL=https://crm.sanaclinica.online
+      - POSTGRES_HOST=postgres
+      - POSTGRES_DATABASE=chatwoot
+      - POSTGRES_USERNAME=chatwoot
+      - POSTGRES_PASSWORD=rnd8f53Utkf$
+      - REDIS_URL=redis://redis:6379
+      - SECRET_KEY_BASE=db3122c49644a5275539857bc31a08fac6e4d52b084f608b1518cb5950c17682b9dc01c8cd571670b5f5f07e34a6a8a8220eec97d6cbb3c398ab7020c9da1cd8
+    networks:
+      - chatwoot-network
+      - nginx_default  # ✅ También en la red del proxy
+    depends_on:
+      - postgres
+      - redis
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ========== POSTGRESQL (para Chatwoot) ==========
+  postgres:
+    image: ankane/pgvector:latest
+    container_name: chatwoot-postgres
+    restart: always
+    environment:
+      - POSTGRES_DB=chatwoot
+      - POSTGRES_USER=chatwoot
+      - POSTGRES_PASSWORD=rnd8f53Utkf$
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - chatwoot-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U chatwoot"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ========== REDIS (para Chatwoot) ==========
+  redis:
+    image: redis:alpine
+    container_name: chatwoot-redis
+    restart: always
+    networks:
+      - chatwoot-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+# ========== REDES ==========
+networks:
+  # Red interna para Nginx Proxy Manager y aplicaciones
+  nginx_default:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+  # Red interna para Sana Web
+  sana-network:
+    driver: bridge
+
+  # Red interna para Chatwoot
+  chatwoot-network:
+    driver: bridge
+
+# ========== VOLÚMENES ==========
+volumes:
+  postgres_data:
+    driver: local
