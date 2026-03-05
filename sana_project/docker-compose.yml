@@ -137,6 +137,7 @@ networks:
   # Red externa - Nginx Proxy Manager (ya existe en el servidor)
   nginx_default:
     external: true
+    name: nginx_default  # Nombre exacto sin prefijo de proyecto
 
   # Red interna para Sana Web
   sana-network:
