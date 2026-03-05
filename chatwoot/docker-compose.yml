@@ -1,7 +1,9 @@
 services:
   chatwoot:
     image: chatwoot/chatwoot:latest
-    command: bundle exec rails s -p 3000 -b 0.0.0.0
+    command: >
+      sh -c "bundle exec rails db:prepare &&
+             bundle exec rails s -p 3000 -b 0.0.0.0"
     restart: always
     ports:
       - "3000:3000"
@@ -15,6 +17,7 @@ services:
       - SECRET_KEY_BASE=db3122c49644a5275539857bc31a08fac6e4d52b084f608b1518cb5950c17682b9dc01c8cd571670b5f5f07e34a6a8a8220eec97d6cbb3c398ab7020c9da1cd8
     networks:
       - chatwoot-network
+      - nginx_default  # ✅ Para acceso del proxy
     depends_on:
       - postgres
       - redis
@@ -38,3 +41,6 @@ services:
 networks:
   chatwoot-network:
     driver: bridge
+  nginx_default:     # ✅ Red EXTERNA del NPM
+    external: true
+    name: nginx_default
