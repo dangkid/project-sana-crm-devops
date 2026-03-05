@@ -9,32 +9,13 @@ ls
 # Debe mostrar: README.md docker-compose.yml DEPLOYMENT.md chatwoot nginx webversion: '3.8'
 
 # ============================================================
-# SANA CLÍNICA - Stack Completo (Nginx Proxy + Web + Chatwoot)
+# SANA CLÍNICA - Stack (Web + Chatwoot)
+# Nota: Nginx Proxy Manager corre por separado en el servidor
 # ============================================================
 
 services:
-  # ========== NGINX PROXY MANAGER ==========
-  nginx-proxy:
-    image: 'jc21/nginx-proxy-manager:latest'
-    container_name: nginx-app-1
-    restart: unless-stopped
-    ports:
-      - '80:80'
-      - '81:81'
-      - '443:443'
-    volumes:
-      - ./nginx/data:/data
-      - ./nginx/letsencrypt:/etc/letsencrypt
-    networks:
-      - nginx_default
-    healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:81/health"]
-      interval: 30s
-      timeout: 5s
-      retries: 3
-
   # ========== APLICACIÓN WEB SANA ==========
-  sana-web:
+  sana-clinica-web:
     build:
       context: ./web
       dockerfile: Dockerfile
@@ -63,10 +44,8 @@ services:
         max-size: "10m"
         max-file: "3"
     networks:
+      - nginx_default
       - sana-network
-      - nginx_default  # ✅ Red compartida con NPM
-    depends_on:
-      - nginx-proxy
 
   # ========== CHATWOOT (CRM) ==========
   chatwoot:
@@ -137,7 +116,6 @@ networks:
   # Red externa - Nginx Proxy Manager (ya existe en el servidor)
   nginx_default:
     external: true
-    name: nginx_default  # Nombre exacto sin prefijo de proyecto
 
   # Red interna para Sana Web
   sana-network:
