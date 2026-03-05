@@ -1,13 +1,3 @@
-cd /sana_project
-rm -rf web chatwoot nginx README.md  # Borra archivos viejos locales
-
-# Mueve contenido de sana_project/ a la raíz
-mv sana_project/* .
-rmdir sana_project
-
-ls
-# Debe mostrar: README.md docker-compose.yml DEPLOYMENT.md chatwoot nginx webversion: '3.8'
-
 # ============================================================
 # SANA CLÍNICA - Stack (Web + Chatwoot)
 # Nota: Nginx Proxy Manager corre por separado en el servidor
@@ -15,7 +5,7 @@ ls
 
 services:
   # ========== APLICACIÓN WEB SANA ==========
-  sana-clinica-web:
+  sana-web:
     build:
       context: ./web
       dockerfile: Dockerfile
@@ -44,8 +34,9 @@ services:
         max-size: "10m"
         max-file: "3"
     networks:
-      - nginx_default
       - sana-network
+      - nginx_default  # ✅ Red del Proxy Manager (EXTERNA)
+    # ⚠️ Ya no depende del nginx-proxy local (corre externamente)
 
   # ========== CHATWOOT (CRM) ==========
   chatwoot:
@@ -113,7 +104,7 @@ services:
 
 # ========== REDES ==========
 networks:
-  # Red externa - Nginx Proxy Manager (ya existe en el servidor)
+  # Red EXTERNA - Nginx Proxy Manager (ya existe en el servidor)
   nginx_default:
     external: true
     name: nginx_default
