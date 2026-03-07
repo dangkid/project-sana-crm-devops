@@ -12,9 +12,9 @@ services:
       - ./nginx/sanasalud.conf:/etc/nginx/sites-available/default:ro
     environment:
       - TZ=America/Bogota
-      - VIRTUAL_HOST=sanasalud.online,www.sanasalud.online
-      - LETSENCRYPT_HOST=sanasalud.online,www.sanasalud.online
-      - LETSENCRYPT_EMAIL=contacto@sanasalud.online
+      - VIRTUAL_HOST=centrosanasalud.com,www.centrosanasalud.com
+      - LETSENCRYPT_HOST=centrosanasalud.com,www.centrosanasalud.com
+      - LETSENCRYPT_EMAIL=contacto@centrosanasalud.com
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost/index.html"]
