@@ -45,7 +45,7 @@ services:
     command: bundle exec rails s -p 3000 -b 0.0.0.0
     restart: always
     environment:
-      - FRONTEND_URL=https://crm.sanaclinica.online
+      - FRONTEND_URL=https://crm.centrosanasalud.com
       - POSTGRES_HOST=postgres
       - POSTGRES_DATABASE=chatwoot
       - POSTGRES_USERNAME=chatwoot
