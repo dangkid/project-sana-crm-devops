@@ -40,7 +40,7 @@ services:
 
   # ========== CHATWOOT (CRM) ==========
   chatwoot:
-    image: chatwoot/chatwoot:latest
+    image: chatwoot/chatwoot:v2.18.0
     container_name: chatwoot-app
     command: bundle exec rails s -p 3000 -b 0.0.0.0
     restart: always
