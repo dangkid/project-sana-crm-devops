@@ -1,20 +1,20 @@
 services:
-  sana-web:
+  sanasalud-web:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: sana-clinica-web
+    container_name: sanasalud-web
     # ✅ NO EXPONER PUERTOS AL HOST - El NPM accede vía red Docker interna
     expose:
       - "80"
     volumes:
-      - ./public:/var/www/sana-clinica:ro
-      - ./nginx/sana.conf:/etc/nginx/sites-available/default:ro
+      - ./public:/var/www/sanasalud:ro
+      - ./nginx/sanasalud.conf:/etc/nginx/sites-available/default:ro
     environment:
       - TZ=America/Bogota
-      - VIRTUAL_HOST=sana-clinica.com,www.sana-clinica.com
-      - LETSENCRYPT_HOST=sana-clinica.com,www.sana-clinica.com
-      - LETSENCRYPT_EMAIL=contacto@sana-clinica.com
+      - VIRTUAL_HOST=sanasalud.com,www.sanasalud.com
+      - LETSENCRYPT_HOST=sanasalud.com,www.sanasalud.com
+      - LETSENCRYPT_EMAIL=contacto@sanasalud.com
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost/index.html"]
@@ -22,11 +22,11 @@ services:
       timeout: 3s
       retries: 3
     networks:
-      - sana-network
+      - sanasalud-network
       - nginx_default  # ✅ Red del Proxy Manager (INTERNA)
 
 networks:
-  sana-network:
+  sanasalud-network:
     driver: bridge
   nginx_default:     # ✅ Red externa del NPM
     external: true

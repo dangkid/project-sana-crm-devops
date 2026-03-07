@@ -1,27 +1,27 @@
 # ============================================================
-# SANA CLÍNICA - Stack (Web + Chatwoot)
+# SANASALUD - Stack (Web + Chatwoot)
 # Nota: Nginx Proxy Manager corre por separado en el servidor
 # ============================================================
 
 services:
-  # ========== APLICACIÓN WEB SANA ==========
-  sana-web:
+  # ========== APLICACIÓN WEB SANASALUD ==========
+  sanasalud-web:
     build:
       context: ./web
       dockerfile: Dockerfile
-    container_name: sana-clinica-web
+    container_name: sanasalud-web
     # ✅ NO EXPONER AL HOST - Proxy accede via red Docker interna
     expose:
       - "80"
     volumes:
-      - ./web/public:/var/www/sana-clinica:ro
-      - ./web/nginx/sana.conf:/etc/nginx/sites-available/default:ro
+      - ./web/public:/var/www/sanasalud:ro
+      - ./web/nginx/sanasalud.conf:/etc/nginx/sites-available/default:ro
     environment:
       - TZ=America/Bogota
       - NODE_ENV=production
-      - VIRTUAL_HOST=sana-clinica.online,www.sana-clinica.online
-      - LETSENCRYPT_HOST=sana-clinica.online,www.sana-clinica.online
-      - LETSENCRYPT_EMAIL=contacto@sana-clinica.com
+      - VIRTUAL_HOST=sanasalud.online,www.sanasalud.online
+      - LETSENCRYPT_HOST=sanasalud.online,www.sanasalud.online
+      - LETSENCRYPT_EMAIL=contacto@sanasalud.com
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost/index.html"]
@@ -34,7 +34,7 @@ services:
         max-size: "10m"
         max-file: "3"
     networks:
-      - sana-network
+      - sanasalud-network
       - nginx_default  # ✅ Red del Proxy Manager (EXTERNA)
     # ⚠️ Ya no depende del nginx-proxy local (corre externamente)
 
@@ -109,8 +109,8 @@ networks:
     external: true
     name: nginx_default
 
-  # Red interna para Sana Web
-  sana-network:
+  # Red interna para Sanasalud Web
+  sanasalud-network:
     driver: bridge
 
   # Red interna para Chatwoot

@@ -12,17 +12,17 @@ RUN apt-get update && apt-get install -y \
 FROM base
 
 # Crear directorios necesarios
-RUN mkdir -p /var/www/sana-clinica
-WORKDIR /var/www/sana-clinica
+RUN mkdir -p /var/www/sanasalud
+WORKDIR /var/www/sanasalud
 
 # Copiar archivos de la aplicación
-COPY public/ /var/www/sana-clinica/
+COPY public/ /var/www/sanasalud/
 
 # Configurar permisos
-RUN chown -R www-data:www-data /var/www/sana-clinica
+RUN chown -R www-data:www-data /var/www/sanasalud
 
 # Copiar configuración de Nginx
-COPY nginx/sana.conf /etc/nginx/sites-available/default
+COPY nginx/sanasalud.conf /etc/nginx/sites-available/default
 
 # Crear enlace simbólico de configuración
 RUN ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
